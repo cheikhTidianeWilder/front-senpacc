@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   HomeIcon,
@@ -9,6 +9,7 @@ import {
   Cog6ToothIcon,
   HeartIcon,
 } from '@heroicons/react/24/outline';
+import Navbar from './Navbar';
 
 interface MenuItem {
   name: string;
@@ -17,30 +18,30 @@ interface MenuItem {
 }
 
 interface SidebarProps {
-    isCollapsed: boolean;
-    setIsCollapsed: (collapsed: boolean) => void;
-  }
+  isCollapsed: boolean;
+  setIsCollapsed: (collapsed: boolean) => void;
+}
 
 const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
-  
+
   const location = useLocation();
 
   const menuItems: MenuItem[] = [
-    { name: 'Dashboard', icon: HomeIcon, path: '/dashboard' },
+    { name: 'Accueil', icon: HomeIcon, path: '/dashboard' },
     { name: 'Patients', icon: UserGroupIcon, path: '/patients' },
-    { name: 'Rendez-vous', icon: CalendarIcon, path: '/appointments' },
     { name: 'Consultations', icon: ClipboardDocumentListIcon, path: '/consultations' },
+    { name: 'Rendez-vous', icon: CalendarIcon, path: '/appointments' },
     { name: 'ECG', icon: HeartIcon, path: '/ecg' },
     { name: 'Statistiques', icon: ChartBarIcon, path: '/statistics' },
     { name: 'Paramètres', icon: Cog6ToothIcon, path: '/settings' },
   ];
 
   return (
-    <div className="fixed top-0 left-0 h-screen bg-white dark:bg-dark-sidebar shadow-lg z-40">
+    <div className="fixed top-0 left-0 h-screen shadow-lg z-40 bg-gradient-to-b from-[#00A48B] to-[#004D94]">
+      <Navbar isSidebarCollapsed={false}/>
       <div
-        className={`flex flex-col h-full ${
-          isCollapsed ? 'w-20' : 'w-64'
-        } relative`}
+        className={`flex flex-col h-full ${isCollapsed ? 'w-20' : 'w-64'
+          } relative`}
       >
         {/* Bouton Toggle flottant */}
         <button
@@ -72,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
         </button>
 
         {/* Logo Section */}
-        <div className="flex-shrink-0 p-4 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex-shrink-0 p-4 border-b border-gray-200 border-opacity-20">
           <div className="flex items-center">
             <div className="flex items-center space-x-2">
               <img
@@ -82,8 +83,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
               />
               {!isCollapsed && (
                 <h1 className="text-2xl font-bold">
-                  <span className="text-senpacc-green dark:text-senpacc-green-dark">SEN</span>
-                  <span className="text-senpacc-blue dark:text-senpacc-blue-dark">PACC</span>
+                  <span className="text-white">SEN</span>
+                  <span className="text-white">PACC</span>
                 </h1>
               )}
             </div>
@@ -97,10 +98,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`flex items-center px-4 py-3 rounded-lg transition-colors 
+                className={`flex items-center px-4 py-3 rounded-lg transition-colors no-underline
                   ${location.pathname === item.path
-                    ? 'bg-senpacc-green/10 dark:bg-senpacc-green/5 text-senpacc-green dark:text-senpacc-green-dark'
-                    : 'text-gray-700 dark:text-gray-200 hover:bg-senpacc-green/10 dark:hover:bg-transparent hover:text-senpacc-green dark:hover:text-senpacc-green-dark'
+                    ? 'bg-white/20 text-white font-semibold'
+                    : 'text-white/80 hover:bg-white/10 hover:text-white'
                   }`}
               >
                 <item.icon className="w-6 h-6 flex-shrink-0" />
@@ -116,4 +117,4 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

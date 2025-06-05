@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from '../components/Card';
+import Card from '../../components/Card';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,7 +26,7 @@ ChartJS.register(
   ArcElement
 );
 
-const Dashboard: React.FC = () => {
+const Accueil: React.FC = () => {
   // Options communes pour les graphiques
   const commonOptions = {
     responsive: true,
@@ -188,4 +188,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard; 
+export default Accueil; 

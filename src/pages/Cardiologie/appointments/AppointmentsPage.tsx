@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Appointment, appointmentService } from '../../services/appointmentService';
-import Card from '../../components/Card';
-import ErrorMessage from '../../components/ErrorMessage';
+import { Appointment, appointmentService } from '../../../services/appointmentService';
+import Card from '../../../components/Card';
+import ErrorMessage from '../../../components/ErrorMessage';
 
 const AppointmentsPage: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);

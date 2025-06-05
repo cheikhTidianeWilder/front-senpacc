@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StatisticsData, statisticsService } from '../../services/statisticsService';
-import Card from '../../components/Card';
-import ErrorMessage from '../../components/ErrorMessage';
+import { StatisticsData, statisticsService } from '../../../services/statisticsService';
+import Card from '../../../components/Card';
+import ErrorMessage from '../../../components/ErrorMessage';
 import {
   Chart as ChartJS,
   CategoryScale,

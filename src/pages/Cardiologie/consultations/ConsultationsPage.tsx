@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Consultation, consultationService } from '../../services/consultationService';
-import Card from '../../components/Card';
-import ErrorMessage from '../../components/ErrorMessage';
+import { Consultation, consultationService } from '../../../services/consultationService';
+import Card from '../../../components/Card';
+import ErrorMessage from '../../../components/ErrorMessage';
 
 const ConsultationsPage: React.FC = () => {
   const [consultations, setConsultations] = useState<Consultation[]>([]);

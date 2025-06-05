@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { ECG, ecgService } from '../../services/ecgService';
-import Card from '../../components/Card';
-import ErrorMessage from '../../components/ErrorMessage';
+import { ECG, ecgService } from '../../../services/ecgService';
+import Card from '../../../components/Card';
+import ErrorMessage from '../../../components/ErrorMessage';
 
 const ECGPage: React.FC = () => {
   const [ecgs, setEcgs] = useState<ECG[]>([]);
