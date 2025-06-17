@@ -1,16 +1,20 @@
 import { Routes, Route } from 'react-router-dom';
-import PatientsPage from '../../pages/Urologie/patients/PatientsPage';
+import Patientall from '../../pages/Urologie/patients/listePatients';
 import Accueil from '../../pages/Urologie/Accueil';
 import UrologieLayout from '../../layouts/UrologieLayout';
+import AddPatientForm from '../../pages/Urologie/patients/PatientFormulaire';
 
 const UrologieRoutes = () => {
     return (
         <Routes>
-            <Route path="/urologie" element={<UrologieLayout />}>
+            <Route path="/" element={<UrologieLayout />}>
                 <Route index element={<Accueil />} />
-                <Route path="/urologie/patients" element={<PatientsPage />} />
+                <Route path="listePatients" element={<Patientall />} />
+                <Route path="insPatient" element={<AddPatientForm />} />
+
             </Route>
         </Routes>
     );
 };
+
 export default UrologieRoutes;

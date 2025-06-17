@@ -45,7 +45,11 @@ const Login = () => {
 
     try {
       const response = await api.post('/auth/login', { email, password });
-      const { accessToken, refreshToken, role } = response.data;
+      const { accessToken, refreshToken} = response.data;
+      const role = response.data.user.role;
+
+      // console.log("Role reçu :", role);
+      // console.log("Réponse complète :", response.data);
 
       localStorage.setItem('token', accessToken);
       localStorage.setItem('refreshToken', refreshToken);

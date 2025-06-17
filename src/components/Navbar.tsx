@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   BellIcon,
   ChevronDownIcon,
   UserCircleIcon,
   CogIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  Bars3Icon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
 interface NavbarProps {
-    isSidebarCollapsed: boolean;
-  }
+  isSidebarCollapsed: boolean;
+  toggleSidebar: () => void; // Nouvelle prop pour gérer le toggle
+}
 
-  const Navbar: React.FC<NavbarProps> = ({ isSidebarCollapsed }) => {
+const Navbar: React.FC<NavbarProps> = ({ isSidebarCollapsed, toggleSidebar }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [notifications, setNotifications] = useState<number>(3);
   const [currentTheme, setCurrentTheme] = useState(() => {
@@ -66,14 +69,14 @@ interface NavbarProps {
 
   const currentThemeConfig = themes[currentTheme];
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
-        };
-    
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-      }, []);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     // Supprimer toutes les classes de thème précédentes
@@ -81,21 +84,20 @@ interface NavbarProps {
       .replace(/bg-\S+/g, '')
       .replace(/text-\S+/g, '')
       .replace(/theme-\S+/g, '');
-    
+
     // Appliquer le nouveau thème au body
-    const themeConfig = themes[currentTheme];
     document.body.classList.add('transition-all', 'duration-500');
-    
+
     // Ajouter un style dynamique pour les variables CSS
     const style = document.createElement('style');
     style.id = 'dynamic-theme-style';
-    
+
     // Supprimer l'ancien style s'il existe
     const oldStyle = document.getElementById('dynamic-theme-style');
     if (oldStyle) oldStyle.remove();
-    
+
     // Appliquer les classes de thème au body
-    switch(currentTheme) {
+    switch (currentTheme) {
       case 0: // Blanc
         document.body.classList.add('bg-white', 'text-gray-900', 'theme-white');
         style.textContent = `
@@ -136,29 +138,53 @@ interface NavbarProps {
         `;
         break;
     }
-    
+
     document.head.appendChild(style);
-    
+
     // Sauvegarder dans localStorage
     localStorage.setItem('currentTheme', currentTheme.toString());
   }, [currentTheme]);
 
   const toggleTheme = () => {
-    setCurrentTheme(prev => (prev + 1) % 3); // Cycle entre 0, 1, 2
+    setCurrentTheme(prev => {
+      const newTheme = (prev + 1) % 3;
+      // Émettre un événement personnalisé pour notifier le changement de thème
+      window.dispatchEvent(new Event('themeChanged'));
+      return newTheme;
+    });
   };
 
   return (
-    <nav 
-      className={`fixed top-0 right-0 z-30 transition-all duration-500 shadow-lg ${currentThemeConfig.navbar} ${
-        isSidebarCollapsed 
-          ? 'left-20 w-[calc(100%-5rem)]' 
+    <nav
+      className={`fixed top-0 right-0 z-30 transition-all duration-500 shadow-lg ${currentThemeConfig.navbar} ${isSidebarCollapsed
+          ? 'left-20 w-[calc(100%-5rem)]'
           : 'left-64 w-[calc(100%-16rem)]'
-      }`}
+        }`}
     >
-      <div className="w-full px-6">
+      <div className="w-full px-4">
         <div className="flex justify-between h-16 items-center">
-          {/* Titre de la section */}
-          <div className="flex items-center">
+          {/* Partie gauche avec bouton toggle */}
+          <div className="flex items-center space-x-4">
+            {/* Bouton Toggle Sidebar */}
+            <button
+              onClick={toggleSidebar}
+              className={`p-2 rounded-lg transition-all duration-200 ${
+                currentTheme === 0 
+                  ? 'hover:bg-gray-200/50 text-gray-700' 
+                  : currentTheme === 1 
+                    ? 'hover:bg-gray-800/50 text-gray-300' 
+                    : 'hover:bg-gray-600/50 text-gray-200'
+              }`}
+              aria-label="Toggle sidebar"
+            >
+              {isSidebarCollapsed ? (
+                <Bars3Icon className="h-6 w-6" />
+              ) : (
+                <XMarkIcon className="h-6 w-6" />
+              )}
+            </button>
+
+            {/* Titre de la section */}
             <div className="flex items-center space-x-3">
               <div className={`h-6 w-6 rounded-lg flex items-center justify-center transition-all duration-300 ${
                 currentTheme === 0 ? 'bg-gray-200/50' :
@@ -175,11 +201,11 @@ interface NavbarProps {
                   Service
                 </h1>
                 <p className={`text-sm transition-colors duration-300 ${currentThemeConfig.subtext}`}>
-                  {new Date().toLocaleDateString('fr-FR', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
+                  {new Date().toLocaleDateString('fr-FR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
                   })} • Thème {currentThemeConfig.displayName}
                 </p>
               </div>
@@ -324,17 +350,17 @@ interface NavbarProps {
                         <a
                           href="/profile"
                           className={`${
-                            active 
+                            active
                               ? currentTheme === 0
                                 ? 'bg-gray-100 text-gray-800 border-r-4 border-gray-500'
                                 : currentTheme === 1
-                                ? 'bg-gray-800 text-white border-r-4 border-gray-600'
-                                : 'bg-gray-600 text-white border-r-4 border-gray-400'
+                                  ? 'bg-gray-800 text-white border-r-4 border-gray-600'
+                                  : 'bg-gray-600 text-white border-r-4 border-gray-400'
                               : currentTheme === 0
                                 ? 'text-gray-700 hover:text-gray-900'
                                 : currentTheme === 1
-                                ? 'text-gray-300 hover:text-white'
-                                : 'text-gray-200 hover:text-white'
+                                  ? 'text-gray-300 hover:text-white'
+                                  : 'text-gray-200 hover:text-white'
                           } flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 group`}
                         >
                           <UserCircleIcon className="h-4 w-4 mr-3 group-hover:scale-110 transition-transform duration-200" />
@@ -349,23 +375,23 @@ interface NavbarProps {
                         </a>
                       )}
                     </Menu.Item>
-                    
+
                     <Menu.Item>
                       {({ active }) => (
                         <a
                           href="/settings"
                           className={`${
-                            active 
+                            active
                               ? currentTheme === 0
                                 ? 'bg-gray-100 text-gray-800 border-r-4 border-gray-500'
                                 : currentTheme === 1
-                                ? 'bg-gray-800 text-white border-r-4 border-gray-600'
-                                : 'bg-gray-600 text-white border-r-4 border-gray-400'
+                                  ? 'bg-gray-800 text-white border-r-4 border-gray-600'
+                                  : 'bg-gray-600 text-white border-r-4 border-gray-400'
                               : currentTheme === 0
                                 ? 'text-gray-700 hover:text-gray-900'
                                 : currentTheme === 1
-                                ? 'text-gray-300 hover:text-white'
-                                : 'text-gray-200 hover:text-white'
+                                  ? 'text-gray-300 hover:text-white'
+                                  : 'text-gray-200 hover:text-white'
                           } flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 group`}
                         >
                           <CogIcon className="h-4 w-4 mr-3 group-hover:scale-110 transition-transform duration-200" />
@@ -386,23 +412,33 @@ interface NavbarProps {
                       currentTheme === 1 ? 'border-gray-700' :
                       'border-gray-500'
                     }`}></div>
-                    
+
                     <Menu.Item>
                       {({ active }) => (
-                        <a
-                          href="/logout"
+                        <button
+                          onClick={async () => {
+                            try {
+                              await fetch("http://localhost:3000/api/auth/logout", {
+                                method: "GET",
+                                credentials: "include", // si tu utilises les cookies
+                              });
+                              window.location.href = "/login"; // ou redirection vers la page d'accueil
+                            } catch (err) {
+                              console.error("Erreur de déconnexion :", err);
+                            }
+                          }}
                           className={`${
-                            active 
-                              ? 'bg-red-50 text-red-600 border-r-4 border-red-500' 
+                            active
+                              ? 'bg-red-50 text-red-600 border-r-4 border-red-500'
                               : currentTheme === 0
                                 ? 'text-gray-700 hover:text-red-600'
                                 : currentTheme === 1
-                                ? 'text-gray-300 hover:text-red-400'
-                                : 'text-gray-200 hover:text-red-400'
-                          } flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 group`}
+                                  ? 'text-gray-300 hover:text-red-400'
+                                  : 'text-gray-200 hover:text-red-400'
+                          } flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 group w-full`}
                         >
                           <ArrowRightOnRectangleIcon className="h-4 w-4 mr-3 group-hover:scale-110 transition-transform duration-200" />
-                          <div>
+                          <div className="text-left">
                             <p>Déconnexion</p>
                             <p className={`text-xs ${
                               currentTheme === 0 ? 'text-gray-500' :
@@ -410,9 +446,10 @@ interface NavbarProps {
                               'text-gray-300'
                             }`}>Se déconnecter en toute sécurité</p>
                           </div>
-                        </a>
+                        </button>
                       )}
                     </Menu.Item>
+
                   </div>
                 </Menu.Items>
               </Transition>
@@ -420,7 +457,6 @@ interface NavbarProps {
           </div>
         </div>
       </div>
-      
       {/* Ligne de séparation subtile */}
       <div className={`absolute bottom-0 left-0 right-0 h-px transition-all duration-500 ${
         currentTheme === 0 ? 'bg-gradient-to-r from-transparent via-gray-300 to-transparent' :

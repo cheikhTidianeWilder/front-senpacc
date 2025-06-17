@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
               className="h-8 w-auto"
             />
             <span className="text-gray-600 dark:text-gray-300">
-              © {new Date().getFullYear()} SENPACC Cardio. Tous droits réservés.
+              © {new Date().getFullYear()} SENPACC. Tous droits réservés.
             </span>
           </div>
           
