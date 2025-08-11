@@ -59,8 +59,8 @@ const Login = () => {
         case 'Urologue':
           navigate('/urologie');
           break;
-        case 'Cardiologue':
-          navigate('/cardiologie');
+        case 'ADMIN':
+          navigate('/administrateur');
           break;
         case 'Gynécologue':
           navigate('/maternite');
